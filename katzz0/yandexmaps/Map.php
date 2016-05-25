@@ -266,7 +266,15 @@ class Map extends JavaScript implements GeoObjectCollection, EventAggregate
         }
 
         if (!empty($geoObjects)) {
-            $js[] = "{$this->getId()}.geoObjects" . implode($geoObjects) . ';';
+            $js[] = 'var myGeoObjects = new ymaps.GeoObjectCollection({}, {
+    preset: "islands#redCircleIcon",
+    strokeWidth: 4,
+    geodesic: true
+});';
+            $js[] = "myGeoObjects" . implode($geoObjects) . ';';
+            $js[] = "{$this->getId()}.geoObjects.add(myGeoObjects);";
+            $js[] = "{$this->getId()}.setBounds(myGeoObjects.getBounds(),{ checkZoomRange: true});";
+
         }
 
         return implode(";\n\t", $js);
