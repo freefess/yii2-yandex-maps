@@ -265,16 +265,22 @@ class Map extends JavaScript implements GeoObjectCollection, EventAggregate
             }
         }
 
+        //Мои изменеения
         if (!empty($geoObjects)) {
-            $js[] = 'var myGeoObjects = new ymaps.GeoObjectCollection({}, {
-    preset: "islands#redCircleIcon",
-    strokeWidth: 4,
-    geodesic: true
-});';
-            $js[] = "myGeoObjects" . implode($geoObjects) . ';';
-            $js[] = "{$this->getId()}.geoObjects.add(myGeoObjects);";
-            $js[] = "{$this->getId()}.setBounds(myGeoObjects.getBounds(),{ checkZoomRange: true});";
 
+            if(count($geoObjects)>1){
+                $js[] = 'var myGeoObjects = new ymaps.GeoObjectCollection({}, {
+                            preset: "islands#redCircleIcon",
+                            strokeWidth: 4,
+                            geodesic: true
+                        });';
+                $js[] = "myGeoObjects" . implode($geoObjects) . ';';
+                $js[] = "{$this->getId()}.geoObjects.add(myGeoObjects);";
+                $js[] = "{$this->getId()}.setBounds(myGeoObjects.getBounds(),{ checkZoomRange: true});";
+            }else{
+                $js[] = "{$this->getId()}.geoObjects" . $geoObjects[0]. ';';
+                $js[] = "{$this->getId()}.setCenter(placemark0.geometry._coordinates);";
+            }
         }
 
         return implode(";\n\t", $js);
